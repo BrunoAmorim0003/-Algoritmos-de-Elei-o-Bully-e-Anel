@@ -1,14 +1,18 @@
+package modelo;
+
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.io.*;
-import java.lang.System.Logger;
+import util.Logger;
 
-public class Processo {
+public class Processo extends Thread {
     private int id;
     private int coordenadorAtual;
     private boolean ativo;
     private ServerSocket servidor;
     private int porta;
+    private List<Processo> todosProcessos;
     
     public Processo(int id, int portaBase) {
         this.id = id;
@@ -21,9 +25,9 @@ public class Processo {
     private void iniciarServidor() {
         try {
             servidor = new ServerSocket(porta);
-            Logger.log("Processo " + id + " iniciado na porta " + porta);
+            Logger.info(this.id, "Processo " + id + " iniciado na porta " + porta);
         } catch (IOException e) {
-            Logger.log("ERRO: Processo " + id + " não pode iniciar servidor");
+            Logger.info(this.id, "ERRO: Processo " + id + " não pode iniciar servidor");
         }
     }
     
@@ -31,9 +35,9 @@ public class Processo {
         try (Socket socket = new Socket("localhost", destino)) {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.println(mensagem);
-            Logger.log("[ENVIO] Processo " + id + " -> " + destino + " [" + tipo + "]: " + mensagem);
+            Logger.info(this.id, "[ENVIO] Processo " + id + " -> " + destino + " [" + tipo + "]: " + mensagem);
         } catch (IOException e) {
-            Logger.log("[FALHA] Processo " + id + " não conseguiu enviar mensagem para " + destino);
+            Logger.info(this.id, "[FALHA] Processo " + id + " não conseguiu enviar mensagem para " + destino);
         }
     }
     
@@ -46,7 +50,7 @@ public class Processo {
         } catch (IOException e) {
             // Ignorar erro ao fechar
         }
-        Logger.log("[FALHA] Processo " + id + " falhou!");
+        Logger.info(this.id, "[FALHA] Processo " + id + " falhou!");
     }
     
     public void recuperar() {
@@ -56,19 +60,20 @@ public class Processo {
                 servidor = new ServerSocket(porta);
             }
         } catch (IOException e) {
-            Logger.log("ERRO: Processo " + id + " não pode recuperar servidor");
+            Logger.info(this.id, "ERRO: Processo " + id + " não pode recuperar servidor");
         }
-        Logger.log("[RECUPERAÇÃO] Processo " + id + " recuperado!");
+        Logger.info(this.id, "[RECUPERAÇÃO] Processo " + id + " recuperado!");
     }
     
     // Getters e Setters
-    public int getId() { return id; }
+    public int getProcessoId() { return this.id; }
     public boolean isAtivo() { return ativo; }
     public int getCoordenadorAtual() { return coordenadorAtual; }
     public void setCoordenadorAtual(int coord) { 
         this.coordenadorAtual = coord;
-        Logger.log("[COORDENADOR] Processo " + id + " reconhece " + coord + " como líder");
+        Logger.info(this.id, "[COORDENADOR] Processo " + id + " reconhece " + coord + " como líder");
     }
     public int getPorta() { return porta; }
     public ServerSocket getServidor() { return servidor; }
+    public List<Processo> getTodosProcessos() { return todosProcessos; }
 }
