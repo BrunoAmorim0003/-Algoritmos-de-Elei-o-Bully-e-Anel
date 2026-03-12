@@ -19,11 +19,11 @@ public class Anel implements AlgoritmoEleicao {
     public void lidarComMensagem(Processo p, String msg) {
         if (msg.startsWith("ANEL_ELEICAO:")) {
             String conteudo = msg.split(":")[1];
-            
+
             // Converte a string "1,2,3" em uma lista de números
             List<Integer> idsNaLista = Arrays.stream(conteudo.split(","))
-                                             .map(Integer::parseInt)
-                                             .collect(Collectors.toList());
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
 
             // Verificação de volta completa
             if (idsNaLista.contains(p.getProcessoId())) {
@@ -35,7 +35,7 @@ public class Anel implements AlgoritmoEleicao {
                 String novaLista = conteudo + "," + p.getProcessoId();
                 enviarParaProximo(p, "ANEL_ELEICAO:" + novaLista);
             }
-        } 
+        }
         // Se a mensagem for o anúncio final do novo líder
         else if (msg.startsWith("COORDENADOR:")) {
             int novoLider = Integer.parseInt(msg.split(":")[1]);
@@ -47,12 +47,14 @@ public class Anel implements AlgoritmoEleicao {
     private void enviarParaProximo(Processo p, String mensagem) {
         int total = p.getTodosProcessos().size();
         int meuId = p.getProcessoId();
-        
-        // Tenta encontrar o próximo vizinho ATIVO
+
+        // Tenta encontrar os processos
         for (int i = 1; i <= total; i++) {
-                int proximoId = (meuId + i) % total;
-                p.enviarMensagem(proximoId, mensagem, "TOKEN_ANEL");
-            return; // Sai do loop após a primeira tentativa de envio
+            int proximoId = (meuId + i) % total;
+            // Se conseguir enviar, para de procurar
+            if (p.enviarMensagem(proximoId, mensagem, "TOKEN_ANEL")) {
+                return;
+            }
         }
     }
 

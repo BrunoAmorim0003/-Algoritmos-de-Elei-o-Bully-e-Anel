@@ -13,7 +13,7 @@ public class Processo extends Thread {
     private ServerSocket servidor;
     private int porta;
     private List<Processo> todosProcessos;
-    
+
     public Processo(int id, int portaBase) {
         this.id = id;
         this.coordenadorAtual = -1;
@@ -21,7 +21,7 @@ public class Processo extends Thread {
         this.porta = portaBase + id;
         iniciarServidor();
     }
-    
+
     private void iniciarServidor() {
         try {
             servidor = new ServerSocket(porta);
@@ -30,17 +30,18 @@ public class Processo extends Thread {
             Logger.info(this.id, "ERRO: Processo " + id + " não pode iniciar servidor");
         }
     }
-    
-    public void enviarMensagem(int destino, String mensagem, String tipo) {
-        try (Socket socket = new Socket("localhost", destino)) {
+
+    public boolean enviarMensagem(int destino, String mensagem, String tipo) {
+        int portaDestino = this.porta - this.id + destino;
+        try (Socket socket = new Socket("localhost", portaDestino)) {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.println(mensagem);
-            Logger.info(this.id, "[ENVIO] Processo " + id + " -> " + destino + " [" + tipo + "]: " + mensagem);
+            return true;
         } catch (IOException e) {
-            Logger.info(this.id, "[FALHA] Processo " + id + " não conseguiu enviar mensagem para " + destino);
+            return false;
         }
     }
-    
+
     public void falhar() {
         this.ativo = false;
         try {
@@ -52,7 +53,7 @@ public class Processo extends Thread {
         }
         Logger.info(this.id, "[FALHA] Processo " + id + " falhou!");
     }
-    
+
     public void recuperar() {
         this.ativo = true;
         try {
@@ -64,16 +65,34 @@ public class Processo extends Thread {
         }
         Logger.info(this.id, "[RECUPERAÇÃO] Processo " + id + " recuperado!");
     }
-    
+
     // Getters e Setters
-    public int getProcessoId() { return this.id; }
-    public boolean isAtivo() { return ativo; }
-    public int getCoordenadorAtual() { return coordenadorAtual; }
-    public void setCoordenadorAtual(int coord) { 
+    public int getProcessoId() {
+        return this.id;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public int getCoordenadorAtual() {
+        return coordenadorAtual;
+    }
+
+    public void setCoordenadorAtual(int coord) {
         this.coordenadorAtual = coord;
         Logger.info(this.id, "[COORDENADOR] Processo " + id + " reconhece " + coord + " como líder");
     }
-    public int getPorta() { return porta; }
-    public ServerSocket getServidor() { return servidor; }
-    public List<Processo> getTodosProcessos() { return todosProcessos; }
+
+    public int getPorta() {
+        return porta;
+    }
+
+    public ServerSocket getServidor() {
+        return servidor;
+    }
+
+    public List<Processo> getTodosProcessos() {
+        return todosProcessos;
+    }
 }
