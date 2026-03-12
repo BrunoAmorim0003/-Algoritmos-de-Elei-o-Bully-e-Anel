@@ -4,6 +4,7 @@ import modelo.Processo;
 import util.Logger;
 
 public class Bully implements AlgoritmoEleicao {
+    @Override
     public void iniciarEleicao(Processo p) {
         Logger.info(p.getProcessoId(), "Iniciando eleição Bully...");
         boolean maiorAtivo = false;
@@ -16,6 +17,7 @@ public class Bully implements AlgoritmoEleicao {
         if (!maiorAtivo) declararVencedor(p);
     }
 
+    @Override
     public void lidarComMensagem(Processo p, String msg) {
         if (msg.equals("ELEICAO")) {
             p.enviarMensagem(p.getProcessoId(), "OK", "ANSWER_OK");
