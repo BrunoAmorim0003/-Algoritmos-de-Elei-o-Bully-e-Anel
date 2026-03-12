@@ -9,14 +9,15 @@ public class Anel implements AlgoritmoEleicao {
 
     @Override
     public void iniciarEleicao(Processo p) {
-        Logger.info(p.getProcessoId(), "Iniciando eleição via ANEL...");
         // Inicia a lista de eleição com o próprio ID
+        Logger.info(p.getProcessoId(), "Iniciando eleição via ANEL...");
         String listaIds = String.valueOf(p.getProcessoId());
         enviarParaProximo(p, "ANEL_ELEICAO:" + listaIds);
     }
 
     @Override
     public void lidarComMensagem(Processo p, String msg) {
+        // Se a mensagem for do tipo eleição, processa a lista de IDs
         if (msg.startsWith("ANEL_ELEICAO:")) {
             String conteudo = msg.split(":")[1];
 

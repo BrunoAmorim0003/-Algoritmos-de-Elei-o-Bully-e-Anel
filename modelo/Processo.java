@@ -69,15 +69,19 @@ public class Processo extends Thread {
     }
 
     public void iniciarMonitoramento() {
+        // Heartbeat para monitorar o coordenador
         new Thread(() -> {
             while (ativo) {
                 try {
-                    Thread.sleep(3000); // Checa a cada 3 segundos
+                    Thread.sleep(3000 + new java.util.Random().nextInt(1500));
+                    if (!ativo)
+                        break;
                     if (coordenadorAtual != -1 && coordenadorAtual != this.id) {
                         boolean liderVivo = enviarMensagem(coordenadorAtual, "PING", "CHECK");
                         if (!liderVivo) {
                             util.Logger.info(this.id, "Detectei que o coordenador " + coordenadorAtual + " caiu!");
                             this.algoritmo.iniciarEleicao(this);
+                            this.coordenadorAtual = -1;
                         }
                     }
                 } catch (InterruptedException e) {
@@ -88,6 +92,8 @@ public class Processo extends Thread {
     }
 
     public void iniciarEleicao(Processo iniciador) {
+        if (!this.ativo)
+            return;
         if (this.algoritmo != null) {
             this.algoritmo.iniciarEleicao(iniciador);
         } else {
@@ -97,6 +103,7 @@ public class Processo extends Thread {
 
     @Override
     public void run() {
+        // Loop principal para receber mensagens
         while (ativo) {
             try (Socket cliente = servidor.accept();
                     BufferedReader in = new BufferedReader(new InputStreamReader(cliente.getInputStream()))) {

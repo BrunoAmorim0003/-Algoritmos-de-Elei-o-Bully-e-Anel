@@ -6,12 +6,15 @@ import util.Logger;
 public class Bully implements AlgoritmoEleicao {
     @Override
     public void iniciarEleicao(Processo p) {
+        // Envia mensagem de eleição para processos com ID maior
         Logger.info(p.getProcessoId(), "Iniciando eleição Bully...");
         boolean maiorAtivo = false;
         for (Processo outro : p.getTodosProcessos()) {
             if (outro.getProcessoId() > p.getProcessoId()) {
-                p.enviarMensagem(outro.getProcessoId(), "ELEICAO", "ELECTION_START");
-                maiorAtivo = true; // Simplificação: assume que tentou
+                boolean enviouComSucesso = p.enviarMensagem(outro.getProcessoId(), "ELEICAO", "ELECTION_START");
+                if (enviouComSucesso) {
+                    maiorAtivo = true; 
+                }
             }
         }
         if (!maiorAtivo) declararVencedor(p);
@@ -19,6 +22,7 @@ public class Bully implements AlgoritmoEleicao {
 
     @Override
     public void lidarComMensagem(Processo p, String msg) {
+        // Se receber uma mensagem de eleição, responde com OK e inicia sua própria eleição
         if (msg.equals("ELEICAO")) {
             p.enviarMensagem(p.getProcessoId(), "OK", "ANSWER_OK");
             iniciarEleicao(p);
