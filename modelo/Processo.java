@@ -3,6 +3,7 @@ package modelo;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import algoritmos.AlgoritmoEleicao;
 import java.io.*;
 import util.Logger;
 
@@ -13,6 +14,7 @@ public class Processo extends Thread {
     private ServerSocket servidor;
     private int porta;
     private List<Processo> todosProcessos;
+    private AlgoritmoEleicao algoritmo;
 
     public Processo(int id, int portaBase) {
         this.id = id;
@@ -66,6 +68,49 @@ public class Processo extends Thread {
         Logger.info(this.id, "[RECUPERAÇÃO] Processo " + id + " recuperado!");
     }
 
+    public void iniciarMonitoramento() {
+        new Thread(() -> {
+            while (ativo) {
+                try {
+                    Thread.sleep(3000); // Checa a cada 3 segundos
+                    if (coordenadorAtual != -1 && coordenadorAtual != this.id) {
+                        boolean liderVivo = enviarMensagem(coordenadorAtual, "PING", "CHECK");
+                        if (!liderVivo) {
+                            util.Logger.info(this.id, "Detectei que o coordenador " + coordenadorAtual + " caiu!");
+                            this.algoritmo.iniciarEleicao(this);
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        }).start();
+    }
+
+    public void iniciarEleicao(Processo iniciador) {
+        if (this.algoritmo != null) {
+            this.algoritmo.iniciarEleicao(iniciador);
+        } else {
+            util.Logger.info(this.id, "ERRO: Nenhum algoritmo de eleição foi definido!");
+        }
+    }
+
+    @Override
+    public void run() {
+        while (ativo) {
+            try (Socket cliente = servidor.accept();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(cliente.getInputStream()))) {
+                String msg = in.readLine();
+                if (msg != null && algoritmo != null) {
+                    algoritmo.lidarComMensagem(this, msg);
+                }
+            } catch (IOException e) {
+                if (ativo)
+                    Logger.info(id, "Erro ao receber mensagem: " + e.getMessage());
+            }
+        }
+    }
+
     // Getters e Setters
     public int getProcessoId() {
         return this.id;
@@ -95,4 +140,13 @@ public class Processo extends Thread {
     public List<Processo> getTodosProcessos() {
         return todosProcessos;
     }
+
+    public void setTodosProcessos(List<Processo> processos) {
+        this.todosProcessos = processos;
+    }
+
+    public void setAlgoritmo(AlgoritmoEleicao alg) {
+        this.algoritmo = alg;
+    }
+
 }
