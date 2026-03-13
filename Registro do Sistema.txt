@@ -1,0 +1,133 @@
+ INICIANDO TESTES: BULLY
+[Processo 0] Processo 0 iniciado na porta 5000
+[Processo 1] Processo 1 iniciado na porta 5001
+[Processo 2] Processo 2 iniciado na porta 5002
+[Processo 3] Processo 3 iniciado na porta 5003
+[Processo 4] Processo 4 iniciado na porta 5004
+[Processo 0] [COORDENADOR] Processo 0 reconhece 4 como líder
+[Processo 1] [COORDENADOR] Processo 1 reconhece 4 como líder
+[Processo 2] [COORDENADOR] Processo 2 reconhece 4 como líder
+[Processo 3] [COORDENADOR] Processo 3 reconhece 4 como líder
+[Processo 4] [COORDENADOR] Processo 4 reconhece 4 como líder
+
+--- [CENÁRIO A] DERRUBANDO O COORDENADOR (ID 4) ---
+[Processo 4] [FALHA] Processo 4 falhou!
+[Processo 1] Detectei que o coordenador 4 caiu!
+[Processo 1] Iniciando eleição Bully...
+[Processo 2] Iniciando eleição Bully...
+[Processo 3] Iniciando eleição Bully...
+[Processo 3] EU SOU O NOVO LÍDER!
+[Processo 0] [COORDENADOR] Processo 0 reconhece 3 como líder
+[Processo 0] Novo líder reconhecido: 3
+[Processo 1] [COORDENADOR] Processo 1 reconhece 3 como líder
+[Processo 1] Novo líder reconhecido: 3
+[Processo 2] [COORDENADOR] Processo 2 reconhece 3 como líder
+[Processo 2] Novo líder reconhecido: 3
+[Processo 3] Iniciando eleição Bully...
+[Processo 3] EU SOU O NOVO LÍDER!
+[Processo 0] [COORDENADOR] Processo 0 reconhece 3 como líder
+[Processo 0] Novo líder reconhecido: 3
+[Processo 1] [COORDENADOR] Processo 1 reconhece 3 como líder
+[Processo 1] Novo líder reconhecido: 3
+[Processo 2] [COORDENADOR] Processo 2 reconhece 3 como líder
+[Processo 2] Novo líder reconhecido: 3
+[Processo 3] [COORDENADOR] Processo 3 reconhece 3 como líder
+[Processo 3] Novo líder reconhecido: 3
+[Processo 3] [COORDENADOR] Processo 3 reconhece 3 como líder
+[Processo 3] Novo líder reconhecido: 3
+
+--- [CENÁRIO A] RECUPERANDO O COORDENADOR (ID 4) ---
+[Processo 4] [RECUPERAÇÃO] Processo 4 recuperado!
+[Processo 4] Iniciando eleição Bully...
+[Processo 4] EU SOU O NOVO LÍDER!
+[Processo 0] [COORDENADOR] Processo 0 reconhece 4 como líder
+[Processo 0] Novo líder reconhecido: 4
+[Processo 1] [COORDENADOR] Processo 1 reconhece 4 como líder
+[Processo 1] Novo líder reconhecido: 4
+[Processo 2] [COORDENADOR] Processo 2 reconhece 4 como líder
+[Processo 2] Novo líder reconhecido: 4
+[Processo 3] [COORDENADOR] Processo 3 reconhece 4 como líder
+[Processo 3] Novo líder reconhecido: 4
+
+--- [CENÁRIO B] MÚLTIPLAS FALHAS SIMULTÂNEAS ---
+Derrubando os processos 4 e 3...
+[Processo 4] [FALHA] Processo 4 falhou!
+[Processo 3] [FALHA] Processo 3 falhou!
+[Processo 1] Detectei que o coordenador 4 caiu!
+[Processo 1] Iniciando eleição Bully...
+[Processo 2] Iniciando eleição Bully...
+[Processo 2] EU SOU O NOVO LÍDER!
+[Processo 0] [COORDENADOR] Processo 0 reconhece 2 como líder
+[Processo 0] Novo líder reconhecido: 2
+[Processo 1] [COORDENADOR] Processo 1 reconhece 2 como líder
+[Processo 1] Novo líder reconhecido: 2
+[Processo 2] [COORDENADOR] Processo 2 reconhece 2 como líder
+[Processo 2] Novo líder reconhecido: 2
+
+--- ENCERRANDO PROCESSOS DO TESTE BULLY ---
+[Processo 0] [FALHA] Processo 0 falhou!
+[Processo 1] [FALHA] Processo 1 falhou!
+[Processo 2] [FALHA] Processo 2 falhou!
+[Processo 3] [FALHA] Processo 3 falhou!
+[Processo 4] [FALHA] Processo 4 falhou!
+
+============================================================
+
+ INICIANDO TESTES: ANEL
+[Processo 0] Processo 0 iniciado na porta 5000
+[Processo 1] Processo 1 iniciado na porta 5001
+[Processo 2] Processo 2 iniciado na porta 5002
+[Processo 3] Processo 3 iniciado na porta 5003
+[Processo 4] Processo 4 iniciado na porta 5004
+[Processo 0] [COORDENADOR] Processo 0 reconhece 4 como líder
+[Processo 1] [COORDENADOR] Processo 1 reconhece 4 como líder
+[Processo 2] [COORDENADOR] Processo 2 reconhece 4 como líder
+[Processo 3] [COORDENADOR] Processo 3 reconhece 4 como líder
+[Processo 4] [COORDENADOR] Processo 4 reconhece 4 como líder
+
+--- [CENÁRIO A] DERRUBANDO O COORDENADOR (ID 4) ---
+[Processo 4] [FALHA] Processo 4 falhou!
+[Processo 0] Detectei que o coordenador 4 caiu!
+[Processo 0] Iniciando eleição via ANEL...
+[Processo 1] Adicionando meu ID à lista e passando adiante...
+[Processo 2] Adicionando meu ID à lista e passando adiante...
+[Processo 3] Adicionando meu ID à lista e passando adiante...
+[Processo 0] Volta completa! O vencedor é: 3
+[Processo 0] [COORDENADOR] Processo 0 reconhece 3 como líder
+[Processo 1] [COORDENADOR] Processo 1 reconhece 3 como líder
+[Processo 1] Reconhecido novo líder: 3
+[Processo 2] [COORDENADOR] Processo 2 reconhece 3 como líder
+[Processo 2] Reconhecido novo líder: 3
+[Processo 3] [COORDENADOR] Processo 3 reconhece 3 como líder
+[Processo 3] Reconhecido novo líder: 3
+
+--- [CENÁRIO A] RECUPERANDO O COORDENADOR (ID 4) ---
+[Processo 4] [RECUPERAÇÃO] Processo 4 recuperado!
+[Processo 4] Iniciando eleição via ANEL...
+[Processo 0] Adicionando meu ID à lista e passando adiante...
+[Processo 1] Adicionando meu ID à lista e passando adiante...
+[Processo 2] Adicionando meu ID à lista e passando adiante...
+[Processo 3] Adicionando meu ID à lista e passando adiante...
+
+--- [CENÁRIO B] MÚLTIPLAS FALHAS SIMULTÂNEAS ---
+Derrubando os processos 4 e 3...
+[Processo 4] [FALHA] Processo 4 falhou!
+[Processo 3] [FALHA] Processo 3 falhou!
+[Processo 1] Detectei que o coordenador 3 caiu!
+[Processo 1] Iniciando eleição via ANEL...
+[Processo 2] Adicionando meu ID à lista e passando adiante...
+[Processo 0] Adicionando meu ID à lista e passando adiante...
+[Processo 1] Volta completa! O vencedor é: 2
+[Processo 1] [COORDENADOR] Processo 1 reconhece 2 como líder
+[Processo 0] [COORDENADOR] Processo 0 reconhece 2 como líder
+[Processo 0] Reconhecido novo líder: 2
+[Processo 2] [COORDENADOR] Processo 2 reconhece 2 como líder
+[Processo 2] Reconhecido novo líder: 2
+
+--- ENCERRANDO PROCESSOS DO TESTE ANEL ---
+[Processo 0] [FALHA] Processo 0 falhou!
+[Processo 1] [FALHA] Processo 1 falhou!
+[Processo 2] [FALHA] Processo 2 falhou!
+[Processo 3] [FALHA] Processo 3 falhou!
+[Processo 4] [FALHA] Processo 4 falhou!
+>>> SIMULAÇÕES FINALIZADAS COM SUCESSO! <<<
